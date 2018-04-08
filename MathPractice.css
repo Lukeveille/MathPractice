@@ -1,0 +1,48 @@
+/* Main Elements */
+body,
+input,
+option {
+    text-align: center;
+}
+button {
+    border-radius: 5px;
+}
+ul {
+    list-style-type: none;
+}
+td {
+    text-align: center;
+    font-weight: normal;
+}
+
+/* Classes */
+.fontStyle {
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* IDs */
+#params {
+    background-color: rgb(57, 141, 209);
+    border-radius: 15px;
+    box-shadow: 5px 5px 16px;
+    display: inline-block;
+    position: relative;
+    width: 30%;
+    height: 60%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    margin-top: 3%;
+    min-width: 300px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+#msgBox {
+    margin-top: 30px;
+    position: relative;
+    font-weight: bold;
+}

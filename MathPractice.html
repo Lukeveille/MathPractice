@@ -1,0 +1,38 @@
+<!DOCType HTML>
+<html>
+    <head>
+        <title>Let's do some math!</title>
+        <link href="MathPractice.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <body class="fontStyle">
+        
+        <div id="params">
+            
+            <b>Highest integer you'd like to see:<br />
+            <input id="range" value="12" type="text" class="fontStyle" size="5" /><br />
+            
+            <br />
+            
+            How many questions?</b><br />
+            <input autofocus="autofocus" id="questions" value="" type="text" class="fontStyle" size="5" /><br />
+            
+            <br />
+            
+            <select id="mathType" class="fontStyle" type="select">
+                <option value="1">Addition/Subtraction</option>
+                <option selected='selected' value="2">Multiplication</option>
+                <option value="3">Division</option>
+            </select><br />
+            
+            <br />
+            
+            <button onclick="initialize()" class="fontStyle">Let's do some math!</button>
+
+        </div><br />
+
+        <p id="msgBox"></p>
+        <script src="MathPractice.js" type="text/javascript"></script>
+    </body>
+
+</html>
