@@ -15,10 +15,134 @@ var posNeg = 0;
 
 defaultScreen();
 
+// Default prompt screen to set up questions.
+function defaultScreen() {
+    score = 0;
+    q = 0;
+    scoreBoard = new Array();
+
+    msgBox.innerHTML = '';
+    clearParams();
+
+    var b = document.createElement('b');
+    var br1 = document.createElement('br');
+    var br2 = document.createElement('br');
+    var br3 = document.createElement('br');
+    var br4 = document.createElement('br');
+    var br5 = document.createElement('br');
+    var br6 = document.createElement('br');
+    var br7 = document.createElement('br');
+    var br8 = document.createElement('br');
+    var rangeBox = document.createElement('input');
+    var qBox = document.createElement('input');
+    var typeSelect = document.createElement('select');
+    var option1 = document.createElement('option');
+    var option2 = document.createElement('option');
+    var option3 = document.createElement('option');
+    var startButton = document.createElement('input');
+    
+    var hiInteger = document.createTextNode('Highest integer you\'d like to see:');
+    var qCount = document.createTextNode('How many questions?');
+
+    b.appendChild(hiInteger);
+    b.appendChild(br1);
+    b.appendChild(rangeBox);
+    b.appendChild(br2);
+    b.appendChild(br3);
+    b.appendChild(qCount);
+
+    params.appendChild(b);
+    params.appendChild(br4);
+    params.appendChild(qBox);
+    params.appendChild(br5);
+    params.appendChild(br6);
+    params.appendChild(typeSelect);
+    params.appendChild(br7);
+    params.appendChild(br8);
+    params.appendChild(startButton);
+
+    typeSelect.appendChild(option1);
+    typeSelect.appendChild(option2);
+    typeSelect.appendChild(option3);
+
+    rangeBox.setAttribute('id', 'range');
+    rangeBox.setAttribute('value', range);
+    rangeBox.setAttribute('type', 'text');
+    rangeBox.setAttribute('class', 'fontStyle');
+    rangeBox.setAttribute('size', '5');
+
+    qBox.setAttribute('id', 'questions');
+    qBox.setAttribute('value', questions);
+    qBox.setAttribute('type', 'text');
+    qBox.setAttribute('class', 'fontStyle');
+    qBox.setAttribute('size', '5');
+    qBox.select();
+
+    typeSelect.setAttribute('id', 'mathType');
+    typeSelect.setAttribute('class', 'fontStyle');
+    typeSelect.setAttribute('type', 'select');
+
+    startButton.setAttribute('type', 'button');
+    startButton.setAttribute('class', 'fontStyle');
+    startButton.setAttribute('value', 'Let\'s do some math!');
+    startButton.setAttribute('id', 'start');
+    startButton.setAttribute('onMouseUp', 'initialize()');
+
+    startButton.innerHTML='Let\'s do some math!';
+
+    option1.setAttribute('value', '1');
+    option1.innerHTML='Addition/Subtraction';
+    option2.setAttribute('value', '2');
+    option2.innerHTML='Multiplication';
+    option3.setAttribute('value', '3');
+    option3.innerHTML='Division';
+
+    if (mathType==1) {
+        option1.setAttribute('selected', 'selected');
+    } else if (mathType==2) {
+        option2.setAttribute('selected', 'selected');
+    } else if (mathType==3) {
+        option3.setAttribute('selected', 'selected');
+    }
+
+    document.getElementById('range').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            initialize();
+        } else if (event.keyCode == 40 || event.which == 40) {
+            qBox.select();
+        }
+    };
+    document.getElementById('questions').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            initialize();
+        } else if (event.keyCode == 38 || event.which == 38) {
+            rangeBox.select();
+        } else if (event.keyCode == 40 || event.which == 40) {
+            startButton.focus();
+        }
+    };
+    document.getElementById('mathType').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            initialize();
+        }
+    };
+    document.getElementById('start').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            initialize();
+        } else if (event.keyCode == 38 || event.which == 38) {
+            qBox.select();
+        }
+    };
+}
+
 // Display functions for error, correct, and incorrect responses.
 function error() {
     msgBox.setAttribute('style', 'color: red');
-    msgBox.innerHTML = 'INPUT ERROR';
+    msgBox.innerHTML = 'INPUT ERROR! Must enter positive integer';
+}
+function qError() {
+    msgBox.setAttribute('style', 'color: red');
+    msgBox.innerHTML = 'INPUT ERROR! Must enter integer';
 }
 function correct() {
     msgBox.setAttribute('style', 'color: green');
@@ -98,7 +222,7 @@ function questionThread() {
     input.setAttribute('id', 'answr');
     input.setAttribute('size', '5');
     input.setAttribute('class', 'fontStyle');
-    input.select();
+    input.focus();
         
     br;
     p2.appendChild(button1);
@@ -106,7 +230,6 @@ function questionThread() {
 
     button1.setAttribute('value', 'Submit')
     button1.setAttribute('id', 'submit');
-    //button1.setAttribute('class', 'fontStyle');
     button1.setAttribute('type', 'button');
 
     switch(mathType) {
@@ -188,7 +311,7 @@ function quizResult(answr, result) {
     var subButton = document.getElementById('submit');
 
     if (isNaN(answr) || answr=='') {
-        error();
+        qError();
 
     } else if (answr == (result) && (q+1) == questions) { 
         correct();
@@ -220,7 +343,7 @@ function quizResult(answr, result) {
 
     } else {
         incorrect(result);
-        
+
         subButton.setAttribute('value', 'Next Question');
         subButton.setAttribute('onMouseUp', 'questionThread()');
 
@@ -257,10 +380,12 @@ function finalScreen() {
     button2.setAttribute('type', 'button');
     button2.setAttribute('value', 'New Quiz');
     button2.setAttribute('onMouseUp', 'defaultScreen()');
-    button2.select();
+    button2.focus();
     document.getElementById('newQuiz').onkeyup = function(event){
-        if (event.keyCode == 13 || event.which == 13){
+        if (event.keyCode == 13 || event.which == 13) {
             defaultScreen();
+        } else if (event.keyCode == 40 || event.which == 40) {
+            button3.focus();
         }
     };
 
@@ -269,13 +394,15 @@ function finalScreen() {
     button3.setAttribute('value', 'Quiz Review');
     button3.setAttribute('onMouseUp', 'scoreScreen()');
     document.getElementById('scoreButton').onkeyup = function(event){
-        if (event.keyCode == 13 || event.which == 13){
+        if (event.keyCode == 13 || event.which == 13) {
             scoreScreen();
+        } else if (event.keyCode == 38 || event.which == 38) {
+            button2.focus();
         }
     };
 }
 
-// Displays every question, it's correct answer, and the incorrect answer if there was one.
+// Displays a list of every question, it's correct answer, and the incorrect answer if there was one.
 function scoreScreen() {
     var button4 = document.createElement('input');
     msgBox.innerHTML = '';
@@ -290,7 +417,7 @@ function scoreScreen() {
     }
     table = table + '</tbody></table><br />';
     
-    params.innerHTML=table;
+    params.innerHTML='YOU SCORED ' + score + ' / ' + questions + '<br /><br />' + table;
 
     params.appendChild(button4);
 
@@ -306,115 +433,4 @@ function scoreScreen() {
     };
 
     button4.focus();
-}
-
-// Resets the prompt window to default range/questions prompt.
-function defaultScreen() {
-    score = 0;
-    q = 0;
-    scoreBoard = new Array();
-
-    msgBox.innerHTML = '';
-    clearParams();
-
-    var b = document.createElement('b');
-    var br1 = document.createElement('br');
-    var br2 = document.createElement('br');
-    var br3 = document.createElement('br');
-    var br4 = document.createElement('br');
-    var br5 = document.createElement('br');
-    var br6 = document.createElement('br');
-    var br7 = document.createElement('br');
-    var br8 = document.createElement('br');
-    var rangeBox = document.createElement('input');
-    var qBox = document.createElement('input');
-    var typeSelect = document.createElement('select');
-    var option1 = document.createElement('option');
-    var option2 = document.createElement('option');
-    var option3 = document.createElement('option');
-    var startButton = document.createElement('input');
-    var hiInteger = document.createTextNode('Highest integer you\'d like to see:');
-    var qCount = document.createTextNode('How many questions?');
-
-    b.appendChild(hiInteger);
-    b.appendChild(br1);
-    b.appendChild(rangeBox);
-    b.appendChild(br2);
-    b.appendChild(br3);
-    b.appendChild(qCount);
-
-    params.appendChild(b);
-    params.appendChild(br4);
-    params.appendChild(qBox);
-    params.appendChild(br5);
-    params.appendChild(br6);
-    params.appendChild(typeSelect);
-    params.appendChild(br7);
-    params.appendChild(br8);
-    params.appendChild(startButton);
-
-    typeSelect.appendChild(option1);
-    typeSelect.appendChild(option2);
-    typeSelect.appendChild(option3);
-
-    rangeBox.setAttribute('id', 'range');
-    rangeBox.setAttribute('value', range);
-    rangeBox.setAttribute('type', 'text');
-    rangeBox.setAttribute('class', 'fontStyle');
-    rangeBox.setAttribute('size', '5');
-
-    qBox.setAttribute('id', 'questions');
-    qBox.setAttribute('value', questions);
-    qBox.setAttribute('type', 'text');
-    qBox.setAttribute('class', 'fontStyle');
-    qBox.setAttribute('size', '5');
-    qBox.select();
-
-    typeSelect.setAttribute('id', 'mathType');
-    typeSelect.setAttribute('class', 'fontStyle');
-    typeSelect.setAttribute('type', 'select');
-
-    startButton.setAttribute('type', 'button');
-    startButton.setAttribute('class', 'fontStyle');
-    startButton.setAttribute('value', 'Let\'s do some math!');
-    startButton.setAttribute('id', 'start');
-    startButton.setAttribute('onMouseUp', 'initialize()');
-
-    startButton.innerHTML='Let\'s do some math!';
-
-    option1.setAttribute('value', '1');
-    option1.innerHTML='Addition/Subtraction';
-    option2.setAttribute('value', '2');
-    option2.innerHTML='Multiplication';
-    option3.setAttribute('value', '3');
-    option3.innerHTML='Division';
-
-    if (mathType==1) {
-        option1.setAttribute('selected', 'selected');
-    } else if (mathType==2) {
-        option2.setAttribute('selected', 'selected');
-    } else if (mathType==3) {
-        option3.setAttribute('selected', 'selected');
-    }
-
-    document.getElementById('range').onkeyup = function(event){
-        if (event.keyCode == 13 || event.which == 13){
-            initialize();
-        }
-    };
-    document.getElementById('questions').onkeyup = function(event){
-        if (event.keyCode == 13 || event.which == 13){
-            initialize();
-        }
-    };
-    document.getElementById('mathType').onkeyup = function(event){
-        if (event.keyCode == 13 || event.which == 13){
-            initialize();
-        }
-    };
-    document.getElementById('start').onkeyup = function(event){
-        if (event.keyCode == 13 || event.which == 13){
-            initialize();
-        }
-    };
 }
