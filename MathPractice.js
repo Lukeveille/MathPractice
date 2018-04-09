@@ -4,11 +4,17 @@ var q = 0;
 var scoreBoard = new Array();
 
 // Initialize global objects within document.
-var range;
-var questions;
+var range = 12;
+var questions = '';
 var mathType;
 var msgBox = document.getElementById('msgBox');
 var params = document.getElementById('params');
+var rand1;
+var rand2;
+var posNeg = 0;
+
+//
+defaultScreen();
 
 // Display functions for error, correct, and incorrect responses.
 function error() {
@@ -24,10 +30,29 @@ function incorrect(a) {
     msgBox.innerHTML = 'INCORRECT! The answer is ' + a;
 }
 
-// Randomly generates integers for questions.
-function generateQ(range, base) {
-    var a = Math.floor((Math.random() * (range - 1)) + base);
-    return a;
+// Clears all of an elements children.
+function clearParams() {
+    while (params.firstChild) {
+        params.removeChild(params.firstChild);
+    }
+}
+
+// Will target a buttons functionality from input box with enter key.
+function enterFunction(targetInput, targetButton) {
+    document.getElementById(targetInput)
+    .addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById(targetButton).click();
+        }
+    });
+}
+
+// Helper function for setting attributes in DOM elements.
+function setAttributes(el, attrs) {
+    for(var key in attrs) {
+        el.setAttribute(key, attrs[key]);
+    }
 }
 
 // Grab input from user.
@@ -43,57 +68,88 @@ function initialize() {
         questionThread()
     }
 }
+
 // Generates questions and prints them to the parameter box
 function questionThread() {
-    var posNeg = 0;
-
     if (mathType==1) {
         var fetch = Math.random();
         if (fetch < 0.5) {
-            type = '&nbsp; + &nbsp;'
+            type = '  +  '
             posNeg = 1;
         } else {
-            type = '&nbsp; - &nbsp;'
+            type = '  -  '
+            posNeg = 0;
         }
         var base = 1;
     } else if (mathType==2) {
-        type='&nbsp; x &nbsp;';
+        type='  x  ';
         var base = 2;
     } else if (mathType==3){
-        type='&nbsp; / &nbsp;';
+        type='  /  ';
         var base = 2;
     }
     
-    var rand1 = Math.floor((Math.random() * (range - 1)) + base);
-    var rand2 = Math.floor((Math.random() * (range - 1)) + base);
+    rand1 = Math.floor((Math.random() * (range - 1)) + base);
+    rand2 = Math.floor((Math.random() * (range - 1)) + base);
     
     msgBox.innerHTML = '';
 
+    clearParams();
+
+    var input = document.createElement('input');
+    var button1 = document.createElement('button');
+    var br = document.createElement('br');
+    var p1 = document.createElement('p');
+    var p2 = document.createElement('p');
+
+    var qCount = document.createTextNode('Question ' + (q+1) + ' / ' + questions);
+    if (mathType==3) {
+        var qThread = document.createTextNode((rand1 * rand2) + type + rand2 + ' ' + ' = ' + ' ');
+    } else {
+        var qThread = document.createTextNode(rand1 + type + rand2 + ' ' + ' = ' + ' ');
+    }
+
+    var submitButton = document.createTextNode('Submit');
+
+    p1.appendChild(qCount);
+    params.appendChild(p1);
+    params.appendChild(qThread);
+    params.appendChild(input);
+        
+    input.setAttribute('id', 'answr');
+    input.setAttribute('size', '5');
+    input.setAttribute('class', 'fontStyle');
+    input.select();
+        
+    br;
+    button1.appendChild(submitButton);
+    p2.appendChild(button1);
+    params.appendChild(p2);
+
+    button1.setAttribute('id', 'submit');
+    button1.setAttribute('class', 'fontStyle');
+        
+    enterFunction('answr', 'submit');
+
     switch(mathType) {
         case '1':
-        params.innerHTML ='<p id="counter"> Question ' + (q+1) + ' / ' + questions + '</p>' + rand1 + type + rand2 +
-        '&nbsp; = &nbsp;<input autofocus="autofocus" required="required" id="answr" size="5" class="fontStyle" type="text"><p><button id="submit" class="fontStyle" onClick="addSubAnswr('
-        + rand1 + ', ' + rand2 + ', ' + posNeg + ')">Submit</button></p>';
+        button1.setAttribute('onClick', 'addSubAnswr(rand1, rand2, posNeg)');
         break;
 
         case '2':
-        params.innerHTML ='<p id="counter"> Question ' + (q+1) + ' / ' + questions + '</p>' + rand1 + type + rand2 +
-        '&nbsp; = &nbsp;<input id="answr" size="5" class="fontStyle" type="text"><p><button id="submit" class="fontStyle" onClick="multAnswr('
-        + rand1 + ', ' + rand2 + ')">Submit</button></p>';
+        button1.setAttribute('onClick', 'multAnswr(rand1, rand2)');
         break;
 
         case '3':
-        params.innerHTML ='<p id="counter"> Question ' + (q+1) + ' / ' + questions + '</p>' + (rand1*rand2) + type + rand2 +
-        '&nbsp; = &nbsp;<input id="answr" size="5" class="fontStyle" type="text"><p><button id="submit" class="fontStyle" onClick="dividAnswr('
-        + rand1 + ', ' + rand2 + ')">Submit</button></p>';
+        button1.setAttribute('onClick', 'dividAnswr(rand1, rand2)');
         break;   
     }
 }
 
 // Addition/subtraction function.
-function addSubAnswr(a, b, addSub) {
+function addSubAnswr(a, b, posNeg) {
     var answr = document.getElementById('answr').value;
-    if (addSub==1) {
+    if (posNeg==1) {
         var resultAdd = a + b;
         scoreBoard[q] = [(q+1), a, ' + ', b, (a+b), answr];
         quizResult(answr, resultAdd);
@@ -147,7 +203,31 @@ function quizResult(answr, result) {
 }
 // End of quiz screen with score, new quiz button, and quiz review button.
 function finalScreen() {
-    params.innerHTML ='<p id="counter"> YOU SCORED ' + score + ' / ' + questions + '</p> <button id="newQuiz" class="fontStyle" onClick="defaultScreen()">New Quiz</button></p><p><button id="scoreButton" class="fontStyle" onClick="scoreScreen()">Quiz Review</button></p>'
+    clearParams();
+
+    var p3 = document.createElement('p');
+    var p4 = document.createElement('p');
+    var button2 = document.createElement('button');
+    var button3 = document.createElement('button');
+
+    p3.innerHTML='YOU SCORED ' + score + ' / ' + questions;
+    button2.innerHTML='New Quiz';
+    button3.innerHTML='Quiz Review';
+
+    button2.setAttribute('id', 'newQuiz');
+    button2.setAttribute('class', 'fontStyle');
+    button2.setAttribute('onClick', 'defaultScreen()');
+
+    button3.setAttribute('id', 'scoreButton');
+    button3.setAttribute('class', 'fontStyle');
+    button3.setAttribute('onClick', 'scoreScreen()');
+    
+    params.appendChild(p3);
+    params.appendChild(button2);
+    p4.appendChild(button3);
+    params.appendChild(p4);
+
+    //params.innerHTML ='<p id="counter"> YOU SCORED ' + score + ' / ' + questions + '</p> <button id="newQuiz" class="fontStyle" onClick="defaultScreen()">New Quiz</button><p><button id="scoreButton" class="fontStyle" onClick="scoreScreen()">Quiz Review</button></p>'
 }
 // Generate the score screen.
 function scoreScreen() {
@@ -164,6 +244,7 @@ function scoreScreen() {
     table = table + '</tbody></table><br /><button id="reset" onClick="defaultScreen()" class="fontStyle">New Quiz</button>';
     params.innerHTML=table;
 }
+
 // Resets the prompt window to default range/questions prompt.
 function defaultScreen() {
     score = 0;
@@ -171,5 +252,87 @@ function defaultScreen() {
     scoreBoard = new Array();
 
     msgBox.innerHTML = '';
-    params.innerHTML='<b>Highest integer you\'d like to see:<br /><input id="range" value="12" type="text" class="fontStyle" size="5" /><br /><br />How many questions?</b><br /><input id="questions" value="" type="text" class="fontStyle" size="5" /><br /><br /><select id="mathType" class="fontStyle" type="select"><option value="1">Addition/Subtraction</option><option value="2">Multiplication</option><option value="3">Division</option></select><br /><br /><button onclick="initialize()" class="fontStyle">Let\'s do some math!</button>';
+    clearParams();
+
+    var b = document.createElement('b');
+    var br1 = document.createElement('br');
+    var br2 = document.createElement('br');
+    var br3 = document.createElement('br');
+    var br4 = document.createElement('br');
+    var br5 = document.createElement('br');
+    var br6 = document.createElement('br');
+    var br7 = document.createElement('br');
+    var br8 = document.createElement('br');
+    var rangeBox = document.createElement('input');
+    var qBox = document.createElement('input');
+    var typeSelect = document.createElement('select');
+    var option1 = document.createElement('option');
+    var option2 = document.createElement('option');
+    var option3 = document.createElement('option');
+    var startButton = document.createElement('button');
+    var hiInteger = document.createTextNode('Highest integer you\'d like to see:');
+    var qCount = document.createTextNode('How many questions?');
+
+    b.appendChild(hiInteger);
+    b.appendChild(br1);
+    b.appendChild(rangeBox);
+    b.appendChild(br2);
+    b.appendChild(br3);
+    b.appendChild(qCount);
+
+    params.appendChild(b);
+    params.appendChild(br4);
+    params.appendChild(qBox);
+    params.appendChild(br5);
+    params.appendChild(br6);
+    params.appendChild(typeSelect);
+    params.appendChild(br7);
+    params.appendChild(br8);
+    params.appendChild(startButton);
+
+    typeSelect.appendChild(option1);
+    typeSelect.appendChild(option2);
+    typeSelect.appendChild(option3);
+
+    rangeBox.setAttribute('id', 'range');
+    rangeBox.setAttribute('value', range);
+    rangeBox.setAttribute('type', 'text');
+    rangeBox.setAttribute('class', 'fontStyle');
+    rangeBox.setAttribute('size', '5');
+
+    qBox.setAttribute('id', 'questions');
+    qBox.setAttribute('value', questions);
+    qBox.setAttribute('type', 'text');
+    qBox.setAttribute('class', 'fontStyle');
+    qBox.setAttribute('size', '5');
+    qBox.select();
+
+    typeSelect.setAttribute('id', 'mathType');
+    typeSelect.setAttribute('class', 'fontStyle');
+    typeSelect.setAttribute('type', 'select');
+
+    startButton.setAttribute('id', 'start')
+    startButton.setAttribute('onClick', 'initialize()')
+    startButton.setAttribute('class', 'fontStyle')
+
+    startButton.innerHTML='Let\'s do some math!';
+
+    option1.setAttribute('value', '1');
+    option1.innerHTML='Addition/Subtraction';
+    option2.setAttribute('value', '2');
+    option2.innerHTML='Multiplication';
+    option3.setAttribute('value', '3');
+    option3.innerHTML='Division';
+
+    if (mathType==1) {
+        option1.setAttribute('selected', 'selected');
+    } else if (mathType==2) {
+        option2.setAttribute('selected', 'selected');
+    } else if (mathType==3) {
+        option3.setAttribute('selected', 'selected');
+    }
+
+    enterFunction('range', 'start');
+    enterFunction('questions', 'start');
+    enterFunction('mathType', 'start');
 }
