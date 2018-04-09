@@ -189,10 +189,12 @@ function quizResult(answr, result) {
 
     if (isNaN(answr) || answr=='') {
         error();
+
     } else if (answr == (result) && (q+1) == questions) { 
         correct();
         score++;
         finalScreen();
+
     } else if (answr == (result)) {
         correct();
 
@@ -209,16 +211,29 @@ function quizResult(answr, result) {
                 questionThread();
             }
         };
-
         score++;
         q++
+
     } else if ((q+1) == questions) { 
         incorrect(result);
         finalScreen();
+
     } else {
         incorrect(result);
-        submitButton.innerHTML='Next Question';
-        submitButton.setAttribute('onClick', 'questionThread()');
+        
+        subButton.setAttribute('value', 'Next Question');
+        subButton.setAttribute('onMouseUp', 'questionThread()');
+
+        document.getElementById('submit').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                questionThread();
+            }
+        };
+        document.getElementById('answr').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                questionThread();
+            }
+        };
         q++
     }
 }
