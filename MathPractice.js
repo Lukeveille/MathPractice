@@ -13,7 +13,6 @@ var rand1;
 var rand2;
 var posNeg = 0;
 
-//
 defaultScreen();
 
 // Display functions for error, correct, and incorrect responses.
@@ -34,24 +33,6 @@ function incorrect(a) {
 function clearParams() {
     while (params.firstChild) {
         params.removeChild(params.firstChild);
-    }
-}
-
-// Will target a buttons functionality from input box with enter key.
-function enterFunction(targetInput, targetButton) {
-    document.getElementById(targetInput)
-    .addEventListener("keyup", function(event) {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-            document.getElementById(targetButton).click();
-        }
-    });
-}
-
-// Helper function for setting attributes in DOM elements.
-function setAttributes(el, attrs) {
-    for(var key in attrs) {
-        el.setAttribute(key, attrs[key]);
     }
 }
 
@@ -97,7 +78,7 @@ function questionThread() {
     clearParams();
 
     var input = document.createElement('input');
-    var button1 = document.createElement('button');
+    var button1 = document.createElement('input');
     var br = document.createElement('br');
     var p1 = document.createElement('p');
     var p2 = document.createElement('p');
@@ -108,8 +89,6 @@ function questionThread() {
     } else {
         var qThread = document.createTextNode(rand1 + type + rand2 + ' ' + ' = ' + ' ');
     }
-
-    var submitButton = document.createTextNode('Submit');
 
     p1.appendChild(qCount);
     params.appendChild(p1);
@@ -122,26 +101,55 @@ function questionThread() {
     input.select();
         
     br;
-    button1.appendChild(submitButton);
     p2.appendChild(button1);
     params.appendChild(p2);
 
+    button1.setAttribute('value', 'Submit')
     button1.setAttribute('id', 'submit');
-    button1.setAttribute('class', 'fontStyle');
-        
-    enterFunction('answr', 'submit');
+    //button1.setAttribute('class', 'fontStyle');
+    button1.setAttribute('type', 'button');
 
     switch(mathType) {
         case '1':
-        button1.setAttribute('onClick', 'addSubAnswr(rand1, rand2, posNeg)');
+        button1.setAttribute('onMouseUp', 'addSubAnswr(rand1, rand2, posNeg)');
+        document.getElementById('submit').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                addSubAnswr(rand1, rand2, posNeg);
+            }
+        };
+        document.getElementById('answr').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                addSubAnswr(rand1, rand2, posNeg);
+            }
+        };
         break;
 
         case '2':
-        button1.setAttribute('onClick', 'multAnswr(rand1, rand2)');
+        button1.setAttribute('onMouseUp', 'multAnswr(rand1, rand2)');
+        document.getElementById('submit').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                multAnswr(rand1, rand2);
+            }
+        };
+        document.getElementById('answr').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                multAnswr(rand1, rand2);
+            }
+        };
         break;
 
         case '3':
-        button1.setAttribute('onClick', 'dividAnswr(rand1, rand2)');
+        button1.setAttribute('onMouseUp', 'dividAnswr(rand1, rand2)');
+        document.getElementById('submit').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                dividAnswr(rand1, rand2);
+            }
+        };
+        document.getElementById('answr').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                dividAnswr(rand1, rand2);
+            }
+        };
         break;   
     }
 }
@@ -177,7 +185,7 @@ function dividAnswr(a, b) {
 
 // Testing for correct input, and choosing correct output
 function quizResult(answr, result) {
-    var submitButton = document.getElementById('submit');
+    var subButton = document.getElementById('submit');
 
     if (isNaN(answr) || answr=='') {
         error();
@@ -187,8 +195,21 @@ function quizResult(answr, result) {
         finalScreen();
     } else if (answr == (result)) {
         correct();
-        submitButton.innerHTML='Next Question';
-        submitButton.setAttribute('onClick', 'questionThread()');
+
+        subButton.setAttribute('value', 'Next Question');
+        subButton.setAttribute('onMouseUp', 'questionThread()');
+
+        document.getElementById('submit').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                questionThread();
+            }
+        };
+        document.getElementById('answr').onkeyup = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                questionThread();
+            }
+        };
+
         score++;
         q++
     } else if ((q+1) == questions) { 
@@ -201,36 +222,47 @@ function quizResult(answr, result) {
         q++
     }
 }
-// End of quiz screen with score, new quiz button, and quiz review button.
+// Final screen with score, new quiz button, and quiz review button.
 function finalScreen() {
     clearParams();
 
     var p3 = document.createElement('p');
     var p4 = document.createElement('p');
-    var button2 = document.createElement('button');
-    var button3 = document.createElement('button');
+    var button2 = document.createElement('input');
+    var button3 = document.createElement('input');
 
     p3.innerHTML='YOU SCORED ' + score + ' / ' + questions;
-    button2.innerHTML='New Quiz';
-    button3.innerHTML='Quiz Review';
 
-    button2.setAttribute('id', 'newQuiz');
-    button2.setAttribute('class', 'fontStyle');
-    button2.setAttribute('onClick', 'defaultScreen()');
-
-    button3.setAttribute('id', 'scoreButton');
-    button3.setAttribute('class', 'fontStyle');
-    button3.setAttribute('onClick', 'scoreScreen()');
-    
     params.appendChild(p3);
     params.appendChild(button2);
     p4.appendChild(button3);
     params.appendChild(p4);
 
-    //params.innerHTML ='<p id="counter"> YOU SCORED ' + score + ' / ' + questions + '</p> <button id="newQuiz" class="fontStyle" onClick="defaultScreen()">New Quiz</button><p><button id="scoreButton" class="fontStyle" onClick="scoreScreen()">Quiz Review</button></p>'
+    button2.setAttribute('id', 'newQuiz');
+    button2.setAttribute('type', 'button');
+    button2.setAttribute('value', 'New Quiz');
+    button2.setAttribute('onMouseUp', 'defaultScreen()');
+    button2.select();
+    document.getElementById('newQuiz').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            defaultScreen();
+        }
+    };
+
+    button3.setAttribute('id', 'scoreButton');
+    button3.setAttribute('type', 'button');
+    button3.setAttribute('value', 'Quiz Review');
+    button3.setAttribute('onMouseUp', 'scoreScreen()');
+    document.getElementById('scoreButton').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            scoreScreen();
+        }
+    };
 }
-// Generate the score screen.
+
+// Displays every question, it's correct answer, and the incorrect answer if there was one.
 function scoreScreen() {
+    var button4 = document.createElement('input');
     msgBox.innerHTML = '';
     var table='<table align="center"><thead><th>#</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th><th colspan="4">Question</th><th>&nbsp;</th><th colspan="2">Answer</th></thead><tbody id="scoreBox"><tr></tr>';
     for (var i = 0; i <= q; i++) {
@@ -241,8 +273,24 @@ function scoreScreen() {
             scoreBoard[i][5] + '</td>';
         }
     }
-    table = table + '</tbody></table><br /><button id="reset" onClick="defaultScreen()" class="fontStyle">New Quiz</button>';
+    table = table + '</tbody></table><br />';
+    
     params.innerHTML=table;
+
+    params.appendChild(button4);
+
+    button4.setAttribute('id', 'newQuiz');
+    button4.setAttribute('type', 'button');
+    button4.setAttribute('value', 'New Quiz');
+    button4.setAttribute('onMouseUp', 'defaultScreen()');
+
+    document.getElementById("newQuiz").onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            defaultScreen();
+        }
+    };
+
+    button4.focus();
 }
 
 // Resets the prompt window to default range/questions prompt.
@@ -269,7 +317,7 @@ function defaultScreen() {
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
     var option3 = document.createElement('option');
-    var startButton = document.createElement('button');
+    var startButton = document.createElement('input');
     var hiInteger = document.createTextNode('Highest integer you\'d like to see:');
     var qCount = document.createTextNode('How many questions?');
 
@@ -311,9 +359,11 @@ function defaultScreen() {
     typeSelect.setAttribute('class', 'fontStyle');
     typeSelect.setAttribute('type', 'select');
 
-    startButton.setAttribute('id', 'start')
-    startButton.setAttribute('onClick', 'initialize()')
-    startButton.setAttribute('class', 'fontStyle')
+    startButton.setAttribute('type', 'button');
+    startButton.setAttribute('class', 'fontStyle');
+    startButton.setAttribute('value', 'Let\'s do some math!');
+    startButton.setAttribute('id', 'start');
+    startButton.setAttribute('onMouseUp', 'initialize()');
 
     startButton.innerHTML='Let\'s do some math!';
 
@@ -332,7 +382,24 @@ function defaultScreen() {
         option3.setAttribute('selected', 'selected');
     }
 
-    enterFunction('range', 'start');
-    enterFunction('questions', 'start');
-    enterFunction('mathType', 'start');
+    document.getElementById('range').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            initialize();
+        }
+    };
+    document.getElementById('questions').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            initialize();
+        }
+    };
+    document.getElementById('mathType').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            initialize();
+        }
+    };
+    document.getElementById('start').onkeyup = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            initialize();
+        }
+    };
 }

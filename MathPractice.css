@@ -4,15 +4,22 @@ input,
 option {
     text-align: center;
 }
-button {
+/*button {
     border-radius: 5px;
-}
+}*/
 ul {
     list-style-type: none;
 }
 td {
     text-align: center;
     font-weight: normal;
+}
+button,
+input[type=button] {
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Classes */
@@ -45,4 +52,9 @@ td {
     margin-top: 30px;
     position: relative;
     font-weight: bold;
+}
+#start {
+    display: inline-block;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
 }
