@@ -40,7 +40,7 @@ function defaultScreen() {
     var option2 = document.createElement('option');
     var option3 = document.createElement('option');
     var startButton = document.createElement('input');
-    
+
     var hiInteger = document.createTextNode('Highest integer you\'d like to see:');
     var qCount = document.createTextNode('How many questions?');
 
@@ -193,10 +193,10 @@ function questionThread() {
         type='  /  ';
         var base = 2;
     }
-    
+
     rand1 = Math.floor((Math.random() * (range - 1)) + base);
     rand2 = Math.floor((Math.random() * (range - 1)) + base);
-    
+
     msgBox.innerHTML = '';
 
     clearParams();
@@ -218,12 +218,12 @@ function questionThread() {
     params.appendChild(p1);
     params.appendChild(qThread);
     params.appendChild(input);
-        
+
     input.setAttribute('id', 'answr');
     input.setAttribute('size', '5');
     input.setAttribute('class', 'fontStyle');
     input.focus();
-        
+
     br;
     p2.appendChild(button1);
     params.appendChild(p2);
@@ -273,7 +273,7 @@ function questionThread() {
                 dividAnswr(rand1, rand2);
             }
         };
-        break;   
+        break;
     }
 }
 
@@ -313,7 +313,7 @@ function quizResult(answr, result) {
     if (isNaN(answr) || answr=='') {
         qError();
 
-    } else if (answr == (result) && (q+1) == questions) { 
+    } else if (answr == (result) && (q+1) == questions) {
         correct();
         score++;
         finalScreen();
@@ -337,7 +337,7 @@ function quizResult(answr, result) {
         score++;
         q++
 
-    } else if ((q+1) == questions) { 
+    } else if ((q+1) == questions) {
         incorrect(result);
         finalScreen();
 
@@ -411,12 +411,12 @@ function scoreScreen() {
         if (scoreBoard[i][4]==scoreBoard[i][5]) {
             table += '<tr><td>' + scoreBoard[i][0] + '</td><td>&nbsp;</td><td> ' + scoreBoard[i][1] + ' </td><td>' + scoreBoard[i][2] + '</td><td> ' + scoreBoard[i][3] + ' </td><td>=</td><td>&nbsp;</td><td>' + scoreBoard[i][4] + '</td>';
         } else {
-            table += '<tr><td>' + scoreBoard[i][0] + '</td><td>&nbsp;</td><td> ' + scoreBoard[i][1] + ' </td><td>' + scoreBoard[i][2] + '</td><td> ' + scoreBoard[i][3] + ' </td><td>=</td><td>&nbsp;</td><td>' + scoreBoard[i][4] + '</td><td style="color: red">' + 
+            table += '<tr><td>' + scoreBoard[i][0] + '</td><td>&nbsp;</td><td> ' + scoreBoard[i][1] + ' </td><td>' + scoreBoard[i][2] + '</td><td> ' + scoreBoard[i][3] + ' </td><td>=</td><td>&nbsp;</td><td>' + scoreBoard[i][4] + '</td><td style="color: red">' +
             scoreBoard[i][5] + '</td>';
         }
     }
     table = table + '</tbody></table><br />';
-    
+
     params.innerHTML='YOU SCORED ' + score + ' / ' + questions + '<br /><br />' + table;
 
     params.appendChild(button4);
