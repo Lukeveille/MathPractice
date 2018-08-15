@@ -19,74 +19,28 @@ defaultScreen();
 function defaultScreen() {
     score = 0;
     q = 0;
-    scoreBoard = new Array();
+    scoreBoard = new Array();   
 
     msgBox.innerHTML = '';
     clearParams();
 
-    var b = document.createElement('b');
-    var br1 = document.createElement('br');
-    var br2 = document.createElement('br');
-    var br3 = document.createElement('br');
-    var br4 = document.createElement('br');
-    var br5 = document.createElement('br');
-    var br6 = document.createElement('br');
-    var br7 = document.createElement('br');
-    var br8 = document.createElement('br');
+    var hiInteger = document.createTextNode('Highest integer you\'d like to see:');
     var rangeBox = document.createElement('input');
+    var qCount = document.createTextNode('How many questions?');
     var qBox = document.createElement('input');
     var typeSelect = document.createElement('select');
+    var startButton = document.createElement('input');
     var option1 = document.createElement('option');
     var option2 = document.createElement('option');
     var option3 = document.createElement('option');
-    var startButton = document.createElement('input');
 
-    var hiInteger = document.createTextNode('Highest integer you\'d like to see:');
-    var qCount = document.createTextNode('How many questions?');
+    setChild(params, {hiInteger, rangeBox, qCount, qBox, typeSelect, startButton});
+    setChild(typeSelect, {option1, option2, option3});
 
-    b.appendChild(hiInteger);
-    b.appendChild(br1);
-    b.appendChild(rangeBox);
-    b.appendChild(br2);
-    b.appendChild(br3);
-    b.appendChild(qCount);
-
-    params.appendChild(b);
-    params.appendChild(br4);
-    params.appendChild(qBox);
-    params.appendChild(br5);
-    params.appendChild(br6);
-    params.appendChild(typeSelect);
-    params.appendChild(br7);
-    params.appendChild(br8);
-    params.appendChild(startButton);
-
-    typeSelect.appendChild(option1);
-    typeSelect.appendChild(option2);
-    typeSelect.appendChild(option3);
-
-    rangeBox.setAttribute('id', 'range');
-    rangeBox.setAttribute('value', range);
-    rangeBox.setAttribute('type', 'text');
-    rangeBox.setAttribute('class', 'fontStyle');
-    rangeBox.setAttribute('size', '5');
-
-    qBox.setAttribute('id', 'questions');
-    qBox.setAttribute('value', questions);
-    qBox.setAttribute('type', 'text');
-    qBox.setAttribute('class', 'fontStyle');
-    qBox.setAttribute('size', '5');
-    qBox.select();
-
-    typeSelect.setAttribute('id', 'mathType');
-    typeSelect.setAttribute('class', 'fontStyle');
-    typeSelect.setAttribute('type', 'select');
-
-    startButton.setAttribute('type', 'button');
-    startButton.setAttribute('class', 'fontStyle');
-    startButton.setAttribute('value', 'Let\'s do some math!');
-    startButton.setAttribute('id', 'start');
-    startButton.setAttribute('onMouseUp', 'initialize()');
+    setAttributes(rangeBox, {'id': 'range', 'value': range, 'type': 'text', 'class': 'fontStyle', 'size': '5'});
+    setAttributes(qBox, {'id': 'questions', 'value': questions, 'type': 'text', 'class': 'fontStyle', 'size': '5'});
+    setAttributes(typeSelect, {'id': 'mathType', 'class': 'fontStyle', 'type': 'select'});
+    setAttributes(startButton, {'type': 'button', 'class': 'fontStyle', 'value': 'Let\'s do some math!', 'id': 'start', 'onMouseUp': 'initialize()'});
 
     startButton.innerHTML='Let\'s do some math!';
 
@@ -96,6 +50,8 @@ function defaultScreen() {
     option2.innerHTML='Multiplication';
     option3.setAttribute('value', '3');
     option3.innerHTML='Division';
+
+    qBox.select();
 
     if (mathType==1) {
         option1.setAttribute('selected', 'selected');
@@ -135,31 +91,6 @@ function defaultScreen() {
     };
 }
 
-// Display functions for error, correct, and incorrect responses.
-function error() {
-    msgBox.setAttribute('style', 'color: red');
-    msgBox.innerHTML = 'INPUT ERROR! Must enter positive integer';
-}
-function qError() {
-    msgBox.setAttribute('style', 'color: red');
-    msgBox.innerHTML = 'INPUT ERROR! Must enter integer';
-}
-function correct() {
-    msgBox.setAttribute('style', 'color: green');
-    msgBox.innerHTML = 'CORRECT!';
-}
-function incorrect(a) {
-    msgBox.setAttribute('style', 'color: red');
-    msgBox.innerHTML = 'INCORRECT! The answer is ' + a;
-}
-
-// Clears all of an elements children.
-function clearParams() {
-    while (params.firstChild) {
-        params.removeChild(params.firstChild);
-    }
-}
-
 // Grab input from user.
 function initialize() {
     range = document.getElementById('range').value;
@@ -176,6 +107,7 @@ function initialize() {
 
 // Generates questions and prints them to the parameter box
 function questionThread() {
+    // Chooses which operator to print
     if (mathType==1) {
         var fetch = Math.random();
         if (fetch < 0.5) {
@@ -186,16 +118,19 @@ function questionThread() {
             posNeg = 0;
         }
         var base = 1;
+        var sub = 0;
     } else if (mathType==2) {
         type='  x  ';
         var base = 2;
+        var sub = 1;
     } else if (mathType==3){
         type='  /  ';
         var base = 2;
+        var sub = 1;
     }
 
-    rand1 = Math.floor((Math.random() * (range - 1)) + base);
-    rand2 = Math.floor((Math.random() * (range - 1)) + base);
+    rand1 = Math.floor((Math.random() * (range - sub)) + base);
+    rand2 = Math.floor((Math.random() * (range - sub)) + base);
 
     msgBox.innerHTML = '';
 
@@ -203,7 +138,6 @@ function questionThread() {
 
     var input = document.createElement('input');
     var button1 = document.createElement('input');
-    var br = document.createElement('br');
     var p1 = document.createElement('p');
     var p2 = document.createElement('p');
 
@@ -215,22 +149,15 @@ function questionThread() {
     }
 
     p1.appendChild(qCount);
-    params.appendChild(p1);
-    params.appendChild(qThread);
-    params.appendChild(input);
+    
+    setChild(params, {p1, qThread, input});
+    setAttributes(input, {'id': 'answr', 'size': '5', 'class': 'qBox'});
+    setAttributes(button1, {'value': 'Submit', 'id': 'submit', 'type': 'button'});
 
-    input.setAttribute('id', 'answr');
-    input.setAttribute('size', '5');
-    input.setAttribute('class', 'fontStyle');
-    input.focus();
-
-    br;
     p2.appendChild(button1);
     params.appendChild(p2);
 
-    button1.setAttribute('value', 'Submit')
-    button1.setAttribute('id', 'submit');
-    button1.setAttribute('type', 'button');
+    input.focus();
 
     switch(mathType) {
         case '1':
@@ -321,8 +248,7 @@ function quizResult(answr, result) {
     } else if (answr == (result)) {
         correct();
 
-        subButton.setAttribute('value', 'Next Question');
-        subButton.setAttribute('onMouseUp', 'questionThread()');
+        setAttributes(subButton, {'value': 'Next Question', 'onMouseUp': 'questionThread()'});
 
         document.getElementById('submit').onkeyup = function(event){
             if (event.keyCode == 13 || event.which == 13){
@@ -344,8 +270,7 @@ function quizResult(answr, result) {
     } else {
         incorrect(result);
 
-        subButton.setAttribute('value', 'Next Question');
-        subButton.setAttribute('onMouseUp', 'questionThread()');
+        setAttributes(subButton, {'value': 'Next Question', 'onMouseUp': 'questionThread()'});
 
         document.getElementById('submit').onkeyup = function(event){
             if (event.keyCode == 13 || event.which == 13){
@@ -371,15 +296,11 @@ function finalScreen() {
 
     p3.innerHTML='YOU SCORED ' + score + ' / ' + questions;
 
-    params.appendChild(p3);
-    params.appendChild(button2);
+    setChild(params, {p3, button2, p4});
+    setAttributes(button2, {'id': 'newQuiz', 'type': 'button', 'value': 'New Quiz', 'onMouseUp': 'defaultScreen()'});
+    
     p4.appendChild(button3);
-    params.appendChild(p4);
 
-    button2.setAttribute('id', 'newQuiz');
-    button2.setAttribute('type', 'button');
-    button2.setAttribute('value', 'New Quiz');
-    button2.setAttribute('onMouseUp', 'defaultScreen()');
     button2.focus();
     document.getElementById('newQuiz').onkeyup = function(event){
         if (event.keyCode == 13 || event.which == 13) {
@@ -389,10 +310,7 @@ function finalScreen() {
         }
     };
 
-    button3.setAttribute('id', 'scoreButton');
-    button3.setAttribute('type', 'button');
-    button3.setAttribute('value', 'Quiz Review');
-    button3.setAttribute('onMouseUp', 'scoreScreen()');
+    setAttributes(button3, {'id': 'scoreButton', 'type': 'button', 'value': 'Quiz Review', 'onMouseUp': 'scoreScreen()'});
     document.getElementById('scoreButton').onkeyup = function(event){
         if (event.keyCode == 13 || event.which == 13) {
             scoreScreen();
@@ -405,6 +323,7 @@ function finalScreen() {
 // Displays a list of every question, it's correct answer, and the incorrect answer if there was one.
 function scoreScreen() {
     var button4 = document.createElement('input');
+
     msgBox.innerHTML = '';
     var table='<table align="center"><thead><th>#</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th><th colspan="4">Question</th><th>&nbsp;</th><th colspan="2">Answer</th></thead><tbody id="scoreBox"><tr></tr>';
     for (var i = 0; i <= q; i++) {
@@ -418,13 +337,9 @@ function scoreScreen() {
     table = table + '</tbody></table><br />';
 
     params.innerHTML='YOU SCORED ' + score + ' / ' + questions + '<br /><br />' + table;
-
     params.appendChild(button4);
 
-    button4.setAttribute('id', 'newQuiz');
-    button4.setAttribute('type', 'button');
-    button4.setAttribute('value', 'New Quiz');
-    button4.setAttribute('onMouseUp', 'defaultScreen()');
+    setAttributes(button4, {'id': 'newQuiz', 'type': 'button', 'value': 'New Quiz', 'onMouseUp': 'defaultScreen()'});
 
     document.getElementById("newQuiz").onkeyup = function(event){
         if (event.keyCode == 13 || event.which == 13){
@@ -433,4 +348,39 @@ function scoreScreen() {
     };
 
     button4.focus();
+}
+
+// Helper functions for editing HTML
+function setAttributes(el, attrs) {
+    for(var key in attrs) {
+        el.setAttribute(key, attrs[key]);
+    }
+}
+function setChild(el, attrs) {
+    for(var key in attrs) {
+        el.appendChild(attrs[key]);
+    }
+}
+function clearParams() {
+    while (params.firstChild) {
+        params.removeChild(params.firstChild);
+    }
+}
+
+// Display functions for error, correct, and incorrect responses.
+function error() {
+    msgBox.setAttribute('style', 'color: red');
+    msgBox.innerHTML = 'INPUT ERROR! Must enter positive integer';
+}
+function qError() {
+    msgBox.setAttribute('style', 'color: red');
+    msgBox.innerHTML = 'INPUT ERROR! Must enter integer';
+}
+function correct() {
+    msgBox.setAttribute('style', 'color: green');
+    msgBox.innerHTML = 'CORRECT!';
+}
+function incorrect(a) {
+    msgBox.setAttribute('style', 'color: red');
+    msgBox.innerHTML = 'INCORRECT! The answer is ' + a;
 }
