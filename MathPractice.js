@@ -1,9 +1,7 @@
-// Initialize values for score, questions, and an array for results.
-var score = 0;
-var q = 0;
-var scoreBoard = new Array();
-
-// Initialize global objects within document.
+// Initialize global variables.
+var score;
+var q;
+var scoreBoard;
 var range = 12;
 var questions = '';
 var mathType;
