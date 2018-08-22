@@ -261,7 +261,7 @@ function quizResult(answr, result) {
         score++;
         q++
 
-    } else if ((q+1) == questions) {
+    } else if ((q+1) == questions) {    
         incorrect(result);
         finalScreen();
 
