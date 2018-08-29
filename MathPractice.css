@@ -41,19 +41,10 @@ input[type=button] {
     border-radius: 15px;
     box-shadow: 5px 5px 16px;
     display: inline-block;
-    position: relative;
-    width: 30%;
-    height: 60%;
-    padding-top: 5%;
-    padding-bottom: 5%;
-    margin-top: 3%;
+    margin-top: 30px;
     min-width: 300px;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    padding-left: 3px;
-    padding-right: 3px;
+    padding: 50px 3px 50px 3px;
     font-weight: bold;
-    text-align: center;
 }
 #msgBox {
     margin-top: 30px;
