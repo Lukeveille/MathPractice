@@ -25,6 +25,9 @@ input[type=button] {
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
 }
+table {
+    margin-bottom: 1em;
+}
 
 /* Classes */
 .fontStyle, .qBox {

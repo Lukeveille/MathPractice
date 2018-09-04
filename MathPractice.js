@@ -332,9 +332,9 @@ function scoreScreen() {
             scoreBoard[i][5] + '</td>';
         }
     }
-    table = table + '</tbody></table><br />';
+    table = table + '</tbody></table>';
 
-    params.innerHTML='YOU SCORED ' + score + ' / ' + questions + '<br /><br />' + table;
+    params.innerHTML='<p>YOU SCORED ' + score + ' / ' + questions + '</p>' + table;
     params.appendChild(button4);
 
     setAttributes(button4, {'id': 'newQuiz', 'type': 'button', 'value': 'New Quiz', 'onMouseUp': 'defaultScreen()'});
@@ -354,9 +354,9 @@ function setAttributes(el, attrs) {
         el.setAttribute(key, attrs[key]);
     }
 }
-function setChild(el, attrs) {
-    for(var key in attrs) {
-        el.appendChild(attrs[key]);
+function setChild(el, child) {
+    for(var key in child) {
+        el.appendChild(child[key]);
     }
 }
 function clearParams() {
